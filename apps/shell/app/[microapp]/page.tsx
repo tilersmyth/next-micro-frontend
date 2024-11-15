@@ -1,3 +1,5 @@
+import { microAppConfig } from "@/lib/config";
+
 export default async function Home({
   params,
 }: {
@@ -5,18 +7,20 @@ export default async function Home({
 }) {
   const microapp = (await params).microapp;
 
-  let microapp_port = "";
+  const app = microAppConfig.find((app) => app.key === microapp);
 
-  if (microapp === "dashboard") {
-    microapp_port = "3001";
-  } else if (microapp === "inventory") {
-    microapp_port = "3002";
+  if (!app) {
+    return (
+      <div className="p-10">
+        <h1 className="text-3xl font-bold">404 page not found</h1>
+      </div>
+    );
   }
 
   return (
     <iframe
-      id="microapp-frame"
-      src={`http://localhost:${microapp_port}`}
+      className="border-0 w-full h-full block overflow-hidden"
+      src={`http://localhost:${app.port}`}
     ></iframe>
   );
 }
